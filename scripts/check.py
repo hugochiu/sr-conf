@@ -20,9 +20,9 @@ for raw in (ROOT / 'shadowrocket.conf').read_text().splitlines():
         sections[section].append(line)
 
 general = dict(line.split(' = ', 1) for line in sections['[General]'] if ' = ' in line)
-assert general['dns-server'] == 'https://dns.alidns.com/dns-query#no-h3'
-assert general['direct-dns-server'] == 'https://dns.alidns.com/dns-query#no-h3'
-assert general['fallback-dns-server'] == 'https://doh.pub/dns-query#no-h3'
+assert general['dns-server'] == 'https://dns.alidns.com/dns-query#no-h3,https://doh.pub/dns-query#no-h3'
+assert general['direct-dns-server'] == 'https://dns.alidns.com/dns-query#no-h3,https://doh.pub/dns-query#no-h3'
+assert general['fallback-dns-server'] == '223.5.5.5,119.29.29.29'
 
 groups = dict(line.split(' = ', 1) for line in sections['[Proxy Group]'])
 builtins = {'DIRECT', 'REJECT', 'PROXY'}
