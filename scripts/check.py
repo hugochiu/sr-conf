@@ -125,6 +125,7 @@ expected = {'ad.doubleclick.net': '广告过滤', 'aax.amazon-adsystem.com': '�
             'apps.mzstatic.com': 'DIRECT', 'is1-ssl.mzstatic.com': 'DIRECT',
             'apple-relay.cloudflare.com': '默认代理',
             'apple-relay.fastly-edge.com': '默认代理',
+            'cp4.cloudflare.com': '默认代理',
             'captive.apple.com': 'DIRECT',
             'www.microsoft.com': 'Microsoft', 'www.baidu.com': 'DIRECT',
             'api6-core-lf.amemv.com': 'DIRECT',
