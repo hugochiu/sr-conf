@@ -12,7 +12,7 @@ https://raw.githubusercontent.com/hugochiu/sr-conf/main/shadowrocket.conf
 
 下载并启用配置，将全局路由设为「配置」。配置不提供节点，首次使用时在「默认代理」保持 `PROXY`，并开启首页 → 全局路由 → 启用回退。需要固定出口或排障时，可切换到「手动节点」或地区组；需要配置内故障转移或按延迟自动选路时，再切换到对应策略。
 
-- Apple 默认直连，Apple Private Cloud Compute 的 `apple-relay.cloudflare.com`、`apple-relay.fastly-edge.com` 显式走「默认代理」；App Store API 域名 `itunes.apple.com`、`apps.apple.com` 仍优先走「默认代理」，图片等静态资源域名 `mzstatic.com` 直连。Microsoft 默认直连，AI、GitHub 等默认跟随「默认代理」。
+- Apple 默认直连，Apple Private Cloud Compute 的 `apple-relay.cloudflare.com`、`apple-relay.fastly-edge.com`、`cp4.cloudflare.com` 显式走「默认代理」；App Store API 域名 `itunes.apple.com`、`apps.apple.com` 仍优先走「默认代理」，图片等静态资源域名 `mzstatic.com` 直连。Microsoft 默认直连，AI、GitHub 等默认跟随「默认代理」。
 - 默认 `PROXY` 使用首页当前节点；「启用回退」负责实际连接失败时切换其他可用节点。「故障转移」每 60 秒按可用性切换，「自动节点」每 300 秒按延迟选择，两者都只在手动切换到对应策略时生效。所有地区组和「手动节点」仍保留为人工覆盖。
 - 自动检测使用 `http://www.gstatic.com/generate_204`，只能验证节点到该地址的连通性，不能保证某个 AI、流媒体或其他服务一定具备访问资格。
 - AI 服务可单独选择适用地区的节点；分流不保证节点具备服务访问资格。
