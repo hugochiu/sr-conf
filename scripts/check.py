@@ -19,6 +19,11 @@ for raw in (ROOT / 'shadowrocket.conf').read_text().splitlines():
     else:
         sections[section].append(line)
 
+general = dict(line.split(' = ', 1) for line in sections['[General]'] if ' = ' in line)
+assert general['dns-server'] == 'https://dns.alidns.com/dns-query#no-h3'
+assert general['direct-dns-server'] == 'https://dns.alidns.com/dns-query#no-h3'
+assert general['fallback-dns-server'] == 'https://doh.pub/dns-query#no-h3'
+
 groups = dict(line.split(' = ', 1) for line in sections['[Proxy Group]'])
 builtins = {'DIRECT', 'REJECT', 'PROXY'}
 
@@ -118,6 +123,9 @@ expected = {'ad.doubleclick.net': '广告过滤', 'aax.amazon-adsystem.com': '�
             'www.youtube.com': 'Google', 'www.apple.com': 'Apple',
             'bag.itunes.apple.com': '默认代理', 'amp-api-edge.apps.apple.com': '默认代理',
             'apps.mzstatic.com': 'DIRECT', 'is1-ssl.mzstatic.com': 'DIRECT',
+            'apple-relay.cloudflare.com': '默认代理',
+            'apple-relay.fastly-edge.com': '默认代理',
+            'cp4.cloudflare.com': '默认代理',
             'captive.apple.com': 'DIRECT',
             'www.microsoft.com': 'Microsoft', 'www.baidu.com': 'DIRECT',
             'api6-core-lf.amemv.com': 'DIRECT',

@@ -12,7 +12,7 @@ https://raw.githubusercontent.com/hugochiu/sr-conf/main/shadowrocket.conf
 
 下载并启用配置，将全局路由设为「配置」。配置不提供节点，首次使用时在「默认代理」保持 `PROXY`，并开启首页 → 全局路由 → 启用回退。需要固定出口或排障时，可切换到「手动节点」或地区组；需要配置内故障转移或按延迟自动选路时，再切换到对应策略。
 
-- Apple 默认直连，App Store API 域名 `itunes.apple.com`、`apps.apple.com` 仍优先走「默认代理」，图片等静态资源域名 `mzstatic.com` 直连；Microsoft 默认直连，AI、GitHub 等默认跟随「默认代理」。
+- Apple 默认直连，Apple Private Cloud Compute 的 `apple-relay.cloudflare.com`、`apple-relay.fastly-edge.com`、`cp4.cloudflare.com` 显式走「默认代理」；App Store API 域名 `itunes.apple.com`、`apps.apple.com` 仍优先走「默认代理」，图片等静态资源域名 `mzstatic.com` 直连。Microsoft 默认直连，AI、GitHub 等默认跟随「默认代理」。
 - 默认 `PROXY` 使用首页当前节点；「启用回退」负责实际连接失败时切换其他可用节点。「故障转移」每 60 秒按可用性切换，「自动节点」每 300 秒按延迟选择，两者都只在手动切换到对应策略时生效。所有地区组和「手动节点」仍保留为人工覆盖。
 - 自动检测使用 `http://www.gstatic.com/generate_204`，只能验证节点到该地址的连通性，不能保证某个 AI、流媒体或其他服务一定具备访问资格。
 - AI 服务可单独选择适用地区的节点；分流不保证节点具备服务访问资格。
@@ -20,13 +20,13 @@ https://raw.githubusercontent.com/hugochiu/sr-conf/main/shadowrocket.conf
 
 ## 规则顺序
 
-个人精确例外 → 小范围广告域名 → 服务专属规则（App Store API 代理、mzstatic 直连，优先于 Apple 大类）→ 国内规则及中国 IP → 默认代理。
+个人精确例外 → 小范围广告域名 → 服务专属规则（Apple PCC 与 App Store API 代理、mzstatic 直连，优先于 Apple 大类）→ 国内规则及中国 IP → 默认代理。
 
 广告过滤默认开启，仅列出八个广告平台域名，不加载大型广告库。它不能清除所有广告，也不承诺零误伤；推广链接、奖励广告可能受影响。出现异常时将「广告过滤」切到 `DIRECT` 对比，再按日志添加准确域名例外。此开关只影响本配置中的广告域名。
 
 配置不启用 MITM、脚本或 URL 重写，不修改 STUN 响应，不继承原模板的个人站点和成人内容分组。IPv6 默认开启，`prefer-ipv6 = true` 优先使用 IPv6 地址；网络或目标不支持 IPv6 时仍可使用 IPv4。优先策略在部分 IPv6 质量不佳的网络中可能增加连接延迟。
 
-DNS 使用阿里 DoH，DNS 覆写和直连 DNS 均添加 `#no-h3` 禁用 HTTP/3 自动升级，避免部分网络等待后回退至 HTTP/2。此设置保留加密 DNS 和 IPv6 支持；是否改善应用加载需在实际网络中验证。DoH 加密到解析器的传输，不代表所有 DNS 都走代理，也不能保证无污染或无泄漏。中国 IP 兜底需要解析域名，因此没有加 `no-resolve`。未被国内规则或中国 IP 命中的流量会走默认代理。
+DNS 主解析与直连解析使用阿里 DoH，备用解析器使用腾讯 DNSPod DoH（`fallback-dns-server`）。主解析失败或超时时，可尝试独立的备用 DoH；解析返回空答案时是否触发回退需在 iOS 实测。三处均添加 `#no-h3` 禁用 HTTP/3 自动升级，避免部分网络等待后回退至 HTTP/2。此配置保留加密 DNS 和 IPv6 支持；是否改善应用加载需在实际网络中验证。DoH 加密到解析器的传输，不代表所有应用的 DNS 均经代理，也不能保证无污染或无泄漏。中国 IP 兜底需要解析域名，因此没有加 `no-resolve`。未被国内规则或中国 IP 命中的流量会走默认代理。
 
 ## 更新与验证
 
